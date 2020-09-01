@@ -53,7 +53,7 @@ class Product:
             
             self.typeAnalizervar = StringVar()
             self.typeAnalizer = ttk.Combobox(self.wind, textvariable = self.typeAnalizervar, state = "readonly")
-            self.typeAnalizer['values'] = ('.html', '.css', '.js')
+            self.typeAnalizer['values'] = ('.html', '.css', '.js','.rmt')
             self.typeAnalizer.place(x = 995, y = 12)
             self.typeAnalizer.current(1)
             
@@ -62,7 +62,7 @@ class Product:
     
     # methods of menu      
     def openFile(self):
-        nameFile = filedialog.askopenfilename(title = "Seleccione archivo",filetypes = (("js files","*.js"), ("html files","*.html"),("css files","*.css"),("All Files","*.*")))
+        nameFile = filedialog.askopenfilename(title = "Seleccione archivo",filetypes = (("js files","*.js"), ("html files","*.html"),("css files","*.css"),("All Files","*.*"),("rmt files","*.rmt")))
         if nameFile!='':
             archi1 = open(nameFile, "r", encoding="utf-8")
             contenido = archi1.read()
@@ -80,11 +80,14 @@ class Product:
                 
                 
             elif(self.typeAnalizer.get() == '.html'):
-                a = AHtml()
-                b = a.lexer(cadena)
+                ''' a = AHtml()
+                b = a.lexer(cadena) '''
                 
             elif(self.typeAnalizer.get() == '.css'):
                 print("CSS")
+                
+            elif(self.typeAnalizer.get() == '.rmt'):
+                print("RMT")
             
             
         ''' retorno = lexerHtml(cadena)

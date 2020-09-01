@@ -73,10 +73,10 @@ class Tipo(Enum):
     PORCENTAJE = 60
     
     # Expresiones regulares
-    ID = 3444
-    NUMERO = 234
-    HEXACOLOR = 3342
-    CADENA = 46549
+    ID = 61
+    NUMERO = 62
+    HEXACOLOR = 63
+    CADENA = 64
     
 class Token:
     tipoToken = Tipo.SINREGISTRAR
