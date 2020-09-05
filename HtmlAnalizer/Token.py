@@ -20,8 +20,8 @@ class Tipo(Enum):
     IMG = 14
     SRC = 15
     A = 16 
-    O = 17 
-    U = 18
+    OL = 17 
+    UL = 18
     STYLE = 19
     TABLE = 20
     TH = 21 
@@ -40,6 +40,7 @@ class Tipo(Enum):
     HIPERVINCULO = 32
     CADENA = 33
     SINREGISTRAR = 34
+    LI = 35
     
 class Token:
     tipoToken = Tipo.SINREGISTRAR

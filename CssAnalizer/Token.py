@@ -32,7 +32,7 @@ class Tipo(Enum):
     PADDING = 23
     DISPLAY = 24
     LINEHEIGHT = 25
-    WINDTH = 26 
+    WIDTH = 26 
     HEIGHT = 27 
     MARGTOP = 28 
     MARGRIGHT = 29
@@ -77,6 +77,13 @@ class Tipo(Enum):
     NUMERO = 62
     HEXACOLOR = 63
     CADENA = 64
+    
+    # OTROS SIMBOLOS
+    ASTERISCO = 65
+    PUNTO = 66
+    MENOS = 67
+    CONTENT = 68 
+    
     
 class Token:
     tipoToken = Tipo.SINREGISTRAR

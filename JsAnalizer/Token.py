@@ -13,16 +13,20 @@ class Tipo(Enum):
     LLAVEDER = 8
     DOSPUNTOS = 9
     PUNTO = 10
-    MENOS = 11
+    
     DIAGONAL = 12
+    
     IGUALDAD = 13
-    COMPARACION = 14
+    
+    ''' COMPARACION = 14 '''
     MAYORQUE = 15
     MENORQUE = 16
     MAYORIGUAL = 17
     MENORIGUAL = 18
+    
     CONJUNCION = 19
     DISYUNCION = 20
+    
     ADMIRACIONIZQ = 21
     
     # Palabras reservadas
@@ -51,6 +55,7 @@ class Tipo(Enum):
     
     # Expresines regulares
     ID = 44
+    NUMERO = 45
     
 class Token:
     tipoToken = Tipo.SINREGISTRAR
