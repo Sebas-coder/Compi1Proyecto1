@@ -10,6 +10,7 @@ class Analizador:
     lexema = ""
     fila = 0
     columna = 0
+    bandera = True
     
     
     def __init__(self):  
@@ -68,9 +69,12 @@ class Analizador:
                     if self.caracter == "$" and pos == len(self.entrada)-1:
                         print("final")
                     else:
-                        self.addError(self.caracter,TE.CARACTERINVALIDO)
+                        self.columna += 1
+                        self.addToken(self.caracter,TT.SIMBOLO)
             # Estado 1 - cadenas
             elif self.estado == 1: 
+                if self.caracter == "$" and pos == len(self.entrada)-1:
+                    self.addError(self.lexema,TE.ERERRONEA)
                 if self.caracter != "\"":
                     self.columna += 1
                     self.lexema += self.caracter
@@ -78,8 +82,10 @@ class Analizador:
                         fila += 1
                         columna = 0  
                 else:
-                    pos -= 1
+                    self.columna += 1
+                    self.lexema += self.caracter
                     self.addToken(self.lexema,TT.CADENA)
+                    
             # Estado 2 - PR
             elif self.estado == 2:
                 if self.caracter.isalpha():
@@ -146,6 +152,7 @@ class Analizador:
                 else: 
                     pos -= 1
                     self.addToken(self.lexema,TT.VALOR)
+            pos += 1
 
     def addError(self, lexema,tipo):
         newError = Error(tipo,lexema)

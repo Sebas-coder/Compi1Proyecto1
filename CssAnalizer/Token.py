@@ -82,12 +82,17 @@ class Tipo(Enum):
     ASTERISCO = 65
     PUNTO = 66
     MENOS = 67
+    
     CONTENT = 68 
+    
+    COMENTARIO = 69 
+    
+    
     
     
 class Token:
-    tipoToken = Tipo.SINREGISTRAR
-    lexema = ""
-    def __init__(self, tipo, lexema ):
+    def __init__(self, tipo, lexema, fila, columna):
         self.tipoToken = tipo
         self.lexema = lexema
+        self.fila = fila
+        self.columna = columna

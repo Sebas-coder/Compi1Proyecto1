@@ -41,6 +41,7 @@ class Tipo(Enum):
     CADENA = 33
     SINREGISTRAR = 34
     LI = 35
+    SIMBOLO = 36
     
 class Token:
     tipoToken = Tipo.SINREGISTRAR

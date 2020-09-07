@@ -1,0 +1,10 @@
+digraph {
+	bgcolor="#15415D" label=agraph
+	rankdir=LR size="8,5"
+	node [color=orange fillcolor=white shape=doublecircle style=filled]
+	LR_0
+	LR_5
+	DEPRERES
+	node [shape=circle]
+	LR_0 -> LR_2 [label="SS(B)"]
+}

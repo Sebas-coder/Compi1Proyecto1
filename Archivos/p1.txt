@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/home/sebastian/Escritorio/Proyecto1/Archivos/bootstrap.min.css"
+      rel="stylesheet" type="text/css">
+    <title>Document</title>
+</head>
+<body>
+    <br>
+    <br>
+    <div class = "jumbotron"> 
+        <h2 class="display-3">Lista de token</h2>
+        <table class="table table-hover" >
+            <thead>
+                <tr class="table-secondary">

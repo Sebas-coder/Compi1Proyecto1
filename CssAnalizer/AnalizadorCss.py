@@ -1,11 +1,15 @@
-from Errores.Error import Error
-from Errores.Error import Tipo as TE
+from CssAnalizer.Error import Error
+from CssAnalizer.Error import Tipo as TE
 from CssAnalizer.Token import Token
 from CssAnalizer.Token import Tipo as TT
 
 class Analizador:
+    bandera = True
+    # listas
     lista_tokens = list()
     lista_errores = list()
+    
+    # partes de analisis
     estado = 0 
     lexema = ""
     fila = 0
@@ -16,103 +20,137 @@ class Analizador:
         print("INICIO DE ANALISIS CSS")
 
     def lexer(self,entrada):
+        print("AQUI EMPIEZA")
+        while len(self.lista_tokens) > 0 : self.lista_tokens.pop()
+        while len(self.lista_errores) > 0 : self.lista_errores.pop()
         self.entrada = entrada + '$'
         self.caracter = ''
         pos = 0
         
-        while pos < len(self.entrada[pos]):
+        while pos < len(self.entrada) - 1:
             self.caracter = self.entrada[pos]
             
             # Estado 0
             if self.estado == 0:
                 # Simbolos 
                 if self.caracter == "{":
+                      
                     self.columna += 1
                     self.addToken(self.caracter,TT.LLAVEIZQ)
                 elif self.caracter == "}":
+                      
                     self.columna += 1
                     self.addToken(self.caracter,TT.LLAVEDER)
                 elif self.caracter == ":":
+                      
                     self.columna += 1
                     self.addToken(self.caracter,TT.DOSPUNTOS)
                 elif self.caracter == ";":
+                      
                     self.columna += 1
                     self.addToken(self.caracter,TT.PUNTOYCOMA)
                 elif self.caracter == ",":
+                      
                     self.columna += 1
                     self.addToken(self.caracter,TT.COMA)
+                elif self.caracter == "(":
+                      
+                    self.columna += 1
+                    self.addToken(self.caracter,TT.PARENIZQ)
+                elif self.caracter == ")":
+                      
+                    self.columna += 1
+                    self.addToken(self.caracter,TT.PARENIZQ)
+                elif self.caracter == "*":
+                      
+                    self.columna += 1
+                    self.addToken(self.caracter,TT.ASTERISCO)
+                elif self.caracter == ".":
+                      
+                    self.columna += 1
+                    self.addToken(self.caracter,TT.PUNTO)
+                elif self.caracter == "-":
+                      
+                    self.columna += 1
+                    self.addToken(self.caracter,TT.MENOS)
+                elif self.caracter == "%":
+                      
+                    self.columna += 1
+                    self.addToken(self.caracter,TT.PORCENTAJE)
+                # Identificadores o colores hexagecimales * 5
                 elif self.caracter == "#":
                     if self.entrada[pos + 1].isnumeric() or self.entrada[pos + 1].isalpha():
+                        self.lexema += "#"
                         self.columna += 1
                         self.estado = 5
                     else:
                         self.columna += 1
                         self.addToken(self.caracter,TT.HASH)
-                elif self.caracter == "(":
-                    self.columna += 1
-                    self.addToken(self.caracter,TT.PARENIZQ)
-                elif self.caracter == ")":
-                    self.columna += 1
-                    self.addToken(self.caracter,TT.PARENIZQ)
-                elif self.caracter == "*":
-                    self.columna += 1
-                    self.addToken(self.caracter,TT.ASTERISCO)
-                elif self.caracter == ".":
-                    self.columna += 1
-                    self.addToken(self.caracter,TT.PUNTO)
-                elif self.caracter == "-":
-                    self.columna += 1
-                    self.addToken(self.caracter,TT.MENOS)
-                elif self.caracter == "%":
-                    self.columna += 1
-                    self.addToken(self.caracter,TT.PORCENTAJE)
-                elif self.caracter == ".":
-                    self.columna += 1
-                    self.addToken(self.caracter,TT.PUNTO)
+                # Cadena de texto * 4   
                 elif self.caracter == "\"":
+                      
                     self.columna += 1
                     self.lexema += self.caracter
-                    self.estado = 1
-                # Numeros
+                    self.estado = 4
+                # Comentario * 6
+                elif self.caracter == "/":
+                    if self.entrada[pos + 1] == "*":
+                            
+                        self.columna += 1
+                        self.lexema += self.caracter
+                        self.estado = 6
+                    else:
+                        self.columna += 1
+                        self.addError(self.caracter,TE.CARACTERINVALIDO)    
+                # Numeros * 1 -2
                 elif self.caracter.isnumeric():
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 1
-                # Palabras
-                elif self.isalpha():
+                # Palabras * 3
+                elif self.caracter.isalpha():
+                      
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
                 # Delimitadores
                 elif self.caracter == " ":
                     self.columna += 1
+                      
                 elif self.caracter == "\t":
                     self.columna += 4
+                      
                 elif self.caracter == "\n":
                     self.columna = 0
-                    fila += 1
+                    self.fila += 1
+                      
                 # Errores o final de la cadena
                 else:
                     if self.caracter == "$" and pos == len(self.entrada)-1:
                         print("final")
                     else:
                         self.addError(self.caracter,TE.CARACTERINVALIDO)
+                        self.bandera = False
                 
             # Estado 1 a 2 - numeros
             elif self.estado == 1:
                 if self.caracter.isnumeric():
+                      
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 1
                 elif self.caracter == "." and self.entrada[pos+1].isnumeric():
+                      
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 2
                 else:
                     pos -= 1
                     self.addToken(self.lexema,TT.NUMERO)
+                    
             elif self.estado == 2:
                 if self.caracter.isnumeric():
+                     
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 2
@@ -123,10 +161,12 @@ class Analizador:
             # Estado 3 - PR e ID 
             elif self.estado == 3:
                 if self.caracter.isalpha():
+                     
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
                 elif self.caracter == "-":
+                     
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
@@ -241,7 +281,9 @@ class Analizador:
             
             # Estado 4 - Cadenas 
             elif self.estado == 4:
-                if self.caracter != "\"":
+                if self.caracter == "$" and pos == len(self.entrada)-1:
+                    self.addError(self.lexema,TE.ERERRONEA)
+                elif self.caracter != "\"":
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 4
@@ -249,26 +291,63 @@ class Analizador:
                         self.columna = 0
                         self.fila += 1
                 else:
-                    pos -= 1
+                    self.lexema += self.caracter
                     self.addToken(self.lexema,TT.CADENA)
             # Estado 5 - Identificadores y colores hexagecimales
             elif self.estado == 5:
                 if self.caracter.isalpha() or self.caracter.isnumeric():
+                     
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 5
                 else:
                     pos -= 1
                     self.addToken(self.lexema,TT.ID)
+            # Estado 6 - Comentarios 
+            elif self.estado == 6:
+                 
+                if self.caracter == "*":
+                    self.columna += 1
+                    self.lexema += self.caracter
+                    self.estado = 7
+            
+            elif self.estado == 7:
+                 
+                if self.caracter == "$" and pos == len(self.entrada)-1:
+                    self.addError(self.caracter,TE.ERERRONEA)
+                    self.bandera = False
+                elif self.caracter != "*":
+                    self.columna += 1
+                    self.lexema += self.caracter
+                    self.estado = 7
+                    if self.caracter == "\n":
+                        self.columna = 0
+                        self.fila += 1  
+                elif self.entrada[pos + 1] == "/":
+                    self.columna += 1
+                    self.lexema += self.caracter
+                    self.estado = 8
+                else:
+                    self.columna += 1
+                    self.lexema += self.caracter
+                    self.estado = 7
                     
+            elif self.estado == 8:
+                if self.caracter == "/":
+                    self.columna += 1
+                    self.lexema += self.caracter    
+                    self.addToken(self.lexema,TT.COMENTARIO)
+            pos += 1           
+                                          
     def addError(self, lexema,tipo):
-        newError = Error(tipo,lexema)
+        newError = Error(tipo,lexema,self.fila,self.columna)
         self.lista_errores.append(newError)
         self.estado = 0
         self.lexema = ""
+        self.bandera = False
     
     def addToken(self, lexema, tipo):
-        newToken = Token(tipo,lexema)
+        newToken = Token(tipo,lexema,self.fila,self.columna)
         self.lista_tokens.append(newToken)
         self.estado = 0
         self.lexema = ""

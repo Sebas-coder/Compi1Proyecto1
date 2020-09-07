@@ -18,9 +18,10 @@ class Tipo(Enum):
     
     IGUALDAD = 13
     
-    ''' COMPARACION = 14 '''
+    DIFERENTEDE = 14
     MAYORQUE = 15
     MENORQUE = 16
+    
     MAYORIGUAL = 17
     MENORIGUAL = 18
     
@@ -56,10 +57,16 @@ class Tipo(Enum):
     # Expresines regulares
     ID = 44
     NUMERO = 45
+    COMENTUNI = 46
+    COMENTMUL = 47
+    PUNTOYCOMA = 48
+    COMA = 49
+    CARACTER = 50
+    CADENA = 51
     
 class Token:
-    tipoToken = Tipo.SINREGISTRAR
-    lexema = ""
-    def __init__(self, tipo, lexema ):
+    def __init__(self, tipo, lexema,fila, columna):
         self.tipoToken = tipo
         self.lexema = lexema
+        self.fila = fila 
+        self.columna = columna
