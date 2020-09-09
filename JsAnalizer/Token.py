@@ -63,6 +63,7 @@ class Tipo(Enum):
     COMA = 49
     CARACTER = 50
     CADENA = 51
+    NINGUNO = 52
     
 class Token:
     def __init__(self, tipo, lexema,fila, columna):
