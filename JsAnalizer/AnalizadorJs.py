@@ -2,16 +2,26 @@ from Errores.Error import Error
 from Errores.Error import Tipo as TE
 from JsAnalizer.Token import Token
 from JsAnalizer.Token import Tipo as TT
+from Estados.Graficador import Graficador 
 
 class Analizador:
     lista_tokens = list()
     lista_errores = list()
+    lista_estados = list()
+    lista_grafica = list()
     estado = 0 
     lexema = ""
     fila = 0
     columna = 0
     cadenaCorrecta = ""
     bandera = True
+    E1 = True
+    E2 = True
+    E3 = True
+    E4 = True
+    E5 = True
+    E6 = True
+    Cont_ER = 0
     
     def __init__(self):  
         print("INICIO DE ANALISIS JS")
@@ -79,6 +89,11 @@ class Analizador:
                     self.estado = 7
                 # Cadenas 
                 elif self.caracter == "\"":
+                    if self.E1:
+                        if self.Cont_ER < 3:
+                            self.Cont_ER += 1
+                            self.lista_grafica.append(1)
+                            self.E1 = False
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 8
@@ -140,11 +155,21 @@ class Analizador:
                         self.addToken(self.caracter,TT.ADMIRACIONIZQ)
                 # Numeros
                 elif self.caracter.isnumeric():
+                    if self.E1:
+                        if self.Cont_ER < 3:
+                            self.Cont_ER += 1
+                            self.lista_grafica.append(1)
+                            self.E1 = False
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 1
                 # Palabras
                 elif self.caracter.isalpha():
+                    if self.E2:
+                        if self.Cont_ER < 3:
+                            self.Cont_ER += 1
+                            self.lista_grafica.append(1)
+                            self.E2 = False
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
@@ -262,6 +287,12 @@ class Analizador:
                     self.estado = 6
             
             elif self.estado == 5:
+                if self.E3:
+                        if self.Cont_ER < 3:
+                            self.Cont_ER += 1
+                            self.lista_grafica.append(1)
+                            self.E3 = False
+                            
                 if self.caracter != "\n":
                     self.columna += 1
                     self.lexema += self.caracter
@@ -275,6 +306,12 @@ class Analizador:
                     self.estado = 0
                 
             elif self.estado == 6:
+                if self.E4:
+                        if self.Cont_ER < 3:
+                            self.Cont_ER += 1
+                            self.lista_grafica.append(1)
+                            self.E4 = False
+                            
                 if self.caracter == "$" and pos == len(self.entrada)-1:
                         self.addError(self.lexema,TE.ERERRONEA)
                 elif self.caracter != "*":
@@ -325,6 +362,10 @@ class Analizador:
                     self.addToken(self.lexema,TT.CADENA)
             pos += 1
             
+        
+        gr = Graficador()
+        gr.Graficar(self.lista_grafica) 
+    
     def addError(self, lexema,tipo):
         self.bandera = False
         newError = Error(tipo,lexema,self.fila,self.columna)

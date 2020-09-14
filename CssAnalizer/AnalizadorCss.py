@@ -4,17 +4,18 @@ from CssAnalizer.Token import Token
 from CssAnalizer.Token import Tipo as TT
 
 class Analizador:
-    bandera = True
     # listas
     lista_tokens = list()
     lista_errores = list()
-    
+    lista_estados = list()
     # partes de analisis
     estado = 0 
     lexema = ""
     fila = 0
     columna = 0
-    
+    cadenaCorrecta = ""
+    bandera = True
+    listadoEstados = ""
     
     def __init__(self):  
         print("INICIO DE ANALISIS CSS")
@@ -34,47 +35,47 @@ class Analizador:
             if self.estado == 0:
                 # Simbolos 
                 if self.caracter == "{":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.LLAVEIZQ)
                 elif self.caracter == "}":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.LLAVEDER)
                 elif self.caracter == ":":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.DOSPUNTOS)
                 elif self.caracter == ";":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.PUNTOYCOMA)
                 elif self.caracter == ",":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.COMA)
                 elif self.caracter == "(":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.PARENIZQ)
                 elif self.caracter == ")":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.PARENIZQ)
                 elif self.caracter == "*":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.ASTERISCO)
                 elif self.caracter == ".":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.PUNTO)
                 elif self.caracter == "-":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.MENOS)
                 elif self.caracter == "%":
-                      
+                    self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                     self.columna += 1
                     self.addToken(self.caracter,TT.PORCENTAJE)
                 # Identificadores o colores hexagecimales * 5
@@ -83,22 +84,24 @@ class Analizador:
                         self.lexema += "#"
                         self.columna += 1
                         self.estado = 5
+                        self.listadoEstados += "S5 - " + self.caracter 
                     else:
                         self.columna += 1
                         self.addToken(self.caracter,TT.HASH)
+                        self.listadoEstados += "S0 - " + self.caracter + " -> S9"
                 # Cadena de texto * 4   
-                elif self.caracter == "\"":
-                      
+                elif self.caracter == "\"":  
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 4
+                    self.listadoEstados += "S0 - " + self.caracter 
                 # Comentario * 6
                 elif self.caracter == "/":
                     if self.entrada[pos + 1] == "*":
-                            
                         self.columna += 1
                         self.lexema += self.caracter
                         self.estado = 6
+                        self.listadoEstados += "S0 - " + self.caracter 
                     else:
                         self.columna += 1
                         self.addError(self.caracter,TE.CARACTERINVALIDO)    
@@ -107,23 +110,24 @@ class Analizador:
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 1
+                    self.listadoEstados += "S0 - " + self.caracter 
                 # Palabras * 3
                 elif self.caracter.isalpha():
-                      
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
+                    self.listadoEstados += "S0 - " + self.caracter 
                 # Delimitadores
                 elif self.caracter == " ":
                     self.columna += 1
-                      
+                    self.cadenaCorrecta += lexema
                 elif self.caracter == "\t":
                     self.columna += 4
-                      
+                    self.cadenaCorrecta += lexema
                 elif self.caracter == "\n":
                     self.columna = 0
                     self.fila += 1
-                      
+                    self.cadenaCorrecta += lexema
                 # Errores o final de la cadena
                 else:
                     if self.caracter == "$" and pos == len(self.entrada)-1:
@@ -134,43 +138,49 @@ class Analizador:
                 
             # Estado 1 a 2 - numeros
             elif self.estado == 1:
+                self.listadoEstados += " -> S1 " 
                 if self.caracter.isnumeric():
-                      
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 1
+                    self.listadoEstados += "- " + self.caracter 
                 elif self.caracter == "." and self.entrada[pos+1].isnumeric():
-                      
+                    self.listadoEstados += "- " + self.caracter 
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 2
                 else:
+                    self.addEstados(self.listadoEstados)
                     pos -= 1
                     self.addToken(self.lexema,TT.NUMERO)
                     
             elif self.estado == 2:
+                self.listadoEstados += " -> S2 " 
                 if self.caracter.isnumeric():
-                     
+                    self.listadoEstados += "- " + self.caracter 
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 2
                 else:
                     pos -= 1
+                    self.addEstados(self.listadoEstados)
                     self.addToken(self.lexema,TT.NUMERO)
                     
             # Estado 3 - PR e ID 
             elif self.estado == 3:
+                self.listadoEstados += " -> S3 " 
                 if self.caracter.isalpha():
-                     
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
+                    self.listadoEstados += "- " + self.caracter 
                 elif self.caracter == "-":
-                     
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
+                    self.listadoEstados += "- " + self.caracter
                 else:
+                    self.addEstados(self.listadoEstados)
                     pos -= 1
                     if self.lexema.lower() == "color":
                         self.addToken(self.lexema,TT.COLOR)
@@ -281,6 +291,7 @@ class Analizador:
             
             # Estado 4 - Cadenas 
             elif self.estado == 4:
+                self.listadoEstados += " -> S4 " 
                 if self.caracter == "$" and pos == len(self.entrada)-1:
                     self.addError(self.lexema,TE.ERERRONEA)
                 elif self.caracter != "\"":
@@ -290,29 +301,36 @@ class Analizador:
                     if self.caracter != "\n":
                         self.columna = 0
                         self.fila += 1
+                        self.listadoEstados += "- " + "\\n"
+                    else:
+                        self.listadoEstados += "- " + self.caracter
                 else:
+                    self.addEstados(self.listadoEstados)
                     self.lexema += self.caracter
                     self.addToken(self.lexema,TT.CADENA)
             # Estado 5 - Identificadores y colores hexagecimales
             elif self.estado == 5:
+                self.listadoEstados += " -> S5 " 
                 if self.caracter.isalpha() or self.caracter.isnumeric():
-                     
+                    self.listadoEstados += "- " + self.caracter
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 5
                 else:
                     pos -= 1
+                    self.addEstados(self.listadoEstados)
                     self.addToken(self.lexema,TT.ID)
             # Estado 6 - Comentarios 
             elif self.estado == 6:
-                 
+                self.listadoEstados += " -> S6 " 
                 if self.caracter == "*":
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 7
+                    self.listadoEstados += "- " + self.caracter
             
             elif self.estado == 7:
-                 
+                self.listadoEstados += " -> S7 " 
                 if self.caracter == "$" and pos == len(self.entrada)-1:
                     self.addError(self.caracter,TE.ERERRONEA)
                     self.bandera = False
@@ -323,23 +341,35 @@ class Analizador:
                     if self.caracter == "\n":
                         self.columna = 0
                         self.fila += 1  
+                        self.listadoEstados += "- \\n"
+                    else: 
+                        self.listadoEstados += "- " + self.caracter
                 elif self.entrada[pos + 1] == "/":
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 8
+                    self.listadoEstados += "- * -> S7" 
                 else:
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 7
+                    self.listadoEstados += "- " + self.caracter
                     
-            elif self.estado == 8:
+            elif self.estado == 8: 
                 if self.caracter == "/":
                     self.columna += 1
                     self.lexema += self.caracter    
                     self.addToken(self.lexema,TT.COMENTARIO)
-            pos += 1           
+                    self.listadoEstados += " - / -> S8 "
+                    self.addEstados(self.listadoEstados)
+            pos += 1      
+            
+    def addEstados(self,listaEstados):
+        self.lista_estados.append(listaEstados)
+        self.listadoEstados = "" 
                                           
     def addError(self, lexema,tipo):
+        self.listadoEstados = "" 
         newError = Error(tipo,lexema,self.fila,self.columna)
         self.lista_errores.append(newError)
         self.estado = 0
@@ -347,6 +377,7 @@ class Analizador:
         self.bandera = False
     
     def addToken(self, lexema, tipo):
+        self.cadenaCorrecta += lexema
         newToken = Token(tipo,lexema,self.fila,self.columna)
         self.lista_tokens.append(newToken)
         self.estado = 0

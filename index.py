@@ -1,3 +1,4 @@
+# Librerias para tkinter
 from tkinter import ttk
 from tkinter import * 
 from tkinter import scrolledtext 
@@ -5,6 +6,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import Button
 
+# librerias extra
 from graphviz import Digraph
 import os
 import webbrowser
@@ -13,6 +15,8 @@ import webbrowser
 from HtmlAnalizer.AnalizadorHtml import Analizador as AHtml
 from CssAnalizer.AnalizadorCss import Analizador as ACss
 from JsAnalizer.AnalizadorJs import Analizador as AJs
+from RmtAnalizer.AnalizadorRmt import Analizador as ARmt
+from RmtAnalizer.ScannerRmt import Scanner as ScannerRmt
 
 # index class 
 class Product:
@@ -86,12 +90,12 @@ class Product:
                 vaJs = AJs()
                 vaJs.lexer(cadena)
                 bJs = vaJs.bandera
-                lJs = vaJs.lista_errores
                 
                 if bJs == True:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - Sin errores')
                 else:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - La cadena tiene errores')
+                    lJs = vaJs.lista_errores
                     self.ImpresionTokens(vaJs)
                 
             elif(self.typeAnalizer.get() == '.html'):
@@ -99,11 +103,12 @@ class Product:
                 vaHtml = AHtml()
                 vaHtml.lexer(cadena)
                 bHtml = vaHtml.bandera
-                lHtml = vaHtml.lista_errores
+                
                 if bHtml == True:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - Sin errores')
                 else:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - La cadena tiene errores')
+                    lHtml = vaHtml.lista_errores
                     self.ImpresionTokens(lHtml)
                 
                          
@@ -113,18 +118,33 @@ class Product:
                 vaCss.lexer(cadena)
                 bCss = vaCss.bandera
                 
-                lCss = vaCss.lista_errores
-                
                 if bCss == True:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - Sin errores')
                 else:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - La cadena tiene errores')
+                    lCss = vaCss.lista_errores
                     self.ImpresionTokens(lCss)
                     
-                
-                    
             elif(self.typeAnalizer.get() == '.rmt'):
-                print("RMT")
+                vaRmt = ARmt()
+                vaRmt.lexer(cadena)
+                bRmt = vaRmt.bandera
+                
+                if bRmt == True:
+                    messagebox.showinfo('Project 1', 'Analisis lexico finalizado - Sin errores')
+                    ltRmt = vaRmt.lista_tokens
+                    ScRmt = ScannerRmt()
+                    ScRmt.inicio(ltRmt)
+                    bScRmt = ScRmt.bandera
+                    
+                    if bScRmt == True:
+                        messagebox.showinfo('Project 1', 'Analisis sintactico - Tiene errores')
+                    else:
+                        messagebox.showinfo('Project 1', 'Analisis sintactico - Sin errores')
+                else:
+                    messagebox.showinfo('Project 1', 'Analisis lexico finalizado - La cadena tiene errores')
+                    lRmt = vaRmt.lista_errores
+                    self.ImpresionTokens(lRmt)
                
                 
     def ImpresionTokens(self,listado):
