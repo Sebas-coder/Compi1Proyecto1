@@ -21,6 +21,7 @@ class Analizador:
     E4 = True
     E5 = True
     E6 = True
+    E7 = True
     Cont_ER = 0
     
     def __init__(self):  
@@ -42,44 +43,109 @@ class Analizador:
                 # Comparacion con igual
                 if self.caracter == "=":
                     if self.entrada[pos+1] == "=":
+                        if self.E6:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(6)
+                                self.E6 = False
                         self.columna += 2
                         pos += 1
                         self.lexema = "=="
                         self.addToken(self.lexema,TT.IGUALDAD)
                     else:
+                        if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                         self.columna += 1
                         self.addToken(self.lexema,TT.IGUAL)
                 elif self.caracter == "*":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.ASTERISCO)
                 elif self.caracter == "(":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.PARENIZQ)
                 elif self.caracter == ")":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.PARENDER)
                 elif self.caracter == "+":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.MAS)
                 elif self.caracter == "-":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.MENOS)
                 elif self.caracter == "{":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.LLAVEIZQ)
                 elif self.caracter == "}":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.LLAVEDER)
                 elif self.caracter == ":":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.DOSPUNTOS)
                 elif self.caracter == ";":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.PUNTOYCOMA)
                 elif self.caracter == ".":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.PUNTO)
                 elif self.caracter == ",":
+                    if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                     self.columna += 1
                     self.addToken(self.caracter,TT.COMA)
                 # Caracteres 
@@ -89,30 +155,51 @@ class Analizador:
                     self.estado = 7
                 # Cadenas 
                 elif self.caracter == "\"":
-                    if self.E1:
+                    if self.E5:
                         if self.Cont_ER < 3:
                             self.Cont_ER += 1
-                            self.lista_grafica.append(1)
-                            self.E1 = False
+                            self.lista_grafica.append(5)
+                            self.E5 = False
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 8
                 # Comparadores 
                 elif self.caracter == "<":
                     if self.entrada[pos+1] == "=":
+                        if self.E6:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(6)
+                                self.E6 = False
                         self.columna += 2
                         pos += 1
                         self.lexema = "<="
                         self.addToken(self.lexema,TT.MENORIGUAL)
                     else:
+                        if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                         self.columna += 1
                         self.addToken(self.lexema,TT.MENORQUE)
                 elif self.caracter == ">":
                     if self.entrada[pos+1] == "=":
+                        if self.E6:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(6)
+                                self.E6 = False
+                        pos += 1
                         self.columna += 2
                         self.lexema = ">="
                         self.addToken(self.lexema,TT.MAYORIGUAL)
                     else:
+                        if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                         self.columna += 1
                         self.addToken(self.lexema,TT.MENORQUE)
                 elif self.caracter == "&":
@@ -136,21 +223,41 @@ class Analizador:
                 # Comentarios
                 elif self.caracter == "/":
                     if self.entrada[pos+1] == "/" or  self.entrada[pos+1] == "*":
+                        if self.E3:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(3)
+                                self.E3 = False
                         self.columna += 1
                         self.lexema += self.caracter
                         self.estado = 4
                     else:
+                        if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                         self.columna += 1
                         self.lexema += self.caracter
                         self.addToken(self.caracter,TT.DIAGONAL)
                 # Desigualdad                    
                 elif self.caracter == "!":
                     if self.entrada[pos+1] == "=":
+                        if self.E6:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(6)
+                                self.E6 = False
                         pos += 1
                         self.columna += 1
                         self.lexema += "!="
                         self.addToken(self.lexema,TT.ADMIRACIONIZQ)
                     else: 
+                        if self.E7:
+                            if self.Cont_ER < 3:
+                                self.Cont_ER += 1
+                                self.lista_grafica.append(7)
+                                self.E7 = False
                         self.columna += 1
                         self.addToken(self.caracter,TT.ADMIRACIONIZQ)
                 # Numeros
@@ -168,7 +275,7 @@ class Analizador:
                     if self.E2:
                         if self.Cont_ER < 3:
                             self.Cont_ER += 1
-                            self.lista_grafica.append(1)
+                            self.lista_grafica.append(2)
                             self.E2 = False
                     self.columna += 1
                     self.lexema += self.caracter

@@ -10,6 +10,7 @@ from tkinter import Button
 from graphviz import Digraph
 import os
 import webbrowser
+import time
 
 # Analizers class
 from HtmlAnalizer.AnalizadorHtml import Analizador as AHtml
@@ -117,6 +118,10 @@ class Product:
                 vaCss = ACss()
                 vaCss.lexer(cadena)
                 bCss = vaCss.bandera
+                leCss = vaCss.lista_estados
+                self.txtConsole.delete("1.0", END)
+                for i in range(0,len(leCss)):
+                        self.txtConsole.insert(END, leCss[i] + "\n")
                 
                 if bCss == True:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - Sin errores')
@@ -156,7 +161,7 @@ class Product:
             "    <link href=\""
         archCSS = os.path.dirname(__file__) + "/bootstrap.min.css\" " 
         medio = "rel=\"stylesheet\" type=\"text/css\">\n"\
-            "<title>Document</title>\n"\
+            "<title>REPORTE</title>\n"\
             "</head>\n"\
             "<body>\n"\
             " <br>\n"\
@@ -172,14 +177,15 @@ class Product:
             "<th>Descripcion</th>\n"\
             "</tr>\n"\
             "</thead>\n"\
-            "<tbody>\n"\
-            "<tr class=\"table-light\">\n"   
+            "<tbody>\n"  
         tokens = ""
         for i in range(0,len(listado)):
+            tokens += "<tr class=\"table-light\">\n"
             tokens += "<td>"+ str(i) + "</td>\n"
             tokens += "<td>"+ str(listado[i].fila) + "</td>\n"
             tokens += "<td>"+ str(listado[i].columna) + "</td>\n"
             tokens += "<td>"+ str(listado[i].lexema) + "</td>\n"
+            tokens += "</tr>\n"
         final = "</tr>\n"\
             "</tbody>\n"\
             "</table>\n"\

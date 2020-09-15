@@ -24,11 +24,12 @@ class Analizador:
         print("AQUI EMPIEZA")
         while len(self.lista_tokens) > 0 : self.lista_tokens.pop()
         while len(self.lista_errores) > 0 : self.lista_errores.pop()
+        while len(self.lista_estados) > 0 : self.lista_estados.pop()
         self.entrada = entrada + '$'
         self.caracter = ''
         pos = 0
         
-        while pos < len(self.entrada) - 1:
+        while pos < len(self.entrada) :
             self.caracter = self.entrada[pos]
             
             # Estado 0
@@ -36,46 +37,57 @@ class Analizador:
                 # Simbolos 
                 if self.caracter == "{":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.LLAVEIZQ)
                 elif self.caracter == "}":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.LLAVEDER)
                 elif self.caracter == ":":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.DOSPUNTOS)
                 elif self.caracter == ";":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.PUNTOYCOMA)
                 elif self.caracter == ",":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.COMA)
                 elif self.caracter == "(":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.PARENIZQ)
                 elif self.caracter == ")":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.PARENIZQ)
                 elif self.caracter == "*":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.ASTERISCO)
                 elif self.caracter == ".":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.PUNTO)
                 elif self.caracter == "-":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.MENOS)
                 elif self.caracter == "%":
                     self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                    self.addEstados(self.listadoEstados)
                     self.columna += 1
                     self.addToken(self.caracter,TT.PORCENTAJE)
                 # Identificadores o colores hexagecimales * 5
@@ -89,6 +101,7 @@ class Analizador:
                         self.columna += 1
                         self.addToken(self.caracter,TT.HASH)
                         self.listadoEstados += "S0 - " + self.caracter + " -> S9"
+                        self.addEstados(self.listadoEstados)
                 # Cadena de texto * 4   
                 elif self.caracter == "\"":  
                     self.columna += 1
@@ -120,14 +133,14 @@ class Analizador:
                 # Delimitadores
                 elif self.caracter == " ":
                     self.columna += 1
-                    self.cadenaCorrecta += lexema
+                    self.cadenaCorrecta += self.caracter
                 elif self.caracter == "\t":
                     self.columna += 4
-                    self.cadenaCorrecta += lexema
+                    self.cadenaCorrecta += self.caracter
                 elif self.caracter == "\n":
                     self.columna = 0
                     self.fila += 1
-                    self.cadenaCorrecta += lexema
+                    self.cadenaCorrecta += self.caracter
                 # Errores o final de la cadena
                 else:
                     if self.caracter == "$" and pos == len(self.entrada)-1:
@@ -332,7 +345,7 @@ class Analizador:
             elif self.estado == 7:
                 self.listadoEstados += " -> S7 " 
                 if self.caracter == "$" and pos == len(self.entrada)-1:
-                    self.addError(self.caracter,TE.ERERRONEA)
+                    self.addError(self.lexema,TE.ERERRONEA)
                     self.bandera = False
                 elif self.caracter != "*":
                     self.columna += 1

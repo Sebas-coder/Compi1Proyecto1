@@ -15,19 +15,22 @@ class Scanner:
         self.lista_tokens = lista
         self.lista_size = len(self.lista_tokens) - 1
         self.pre_analisis = self.lista_tokens[self.indice]
+        self.E()
         
     def E(self):
         self.T() 
         self.EP()
         
     def EP(self):
+        if self.bandera:
+            return
         # +
-        if self.pre_analisis == TT.MAS:
+        if self.pre_analisis.tipoToken == TT.MAS:
             self.parea(TT.MAS)
             self.T()
             self.EP()
         # |*
-        elif self.pre_analisis == TT.MENOS:
+        elif self.pre_analisis.tipoToken == TT.MENOS:
             self.parea(TT.MENOS)
             self.T()
             self.EP()
@@ -40,13 +43,15 @@ class Scanner:
         self.TP()
         
     def TP(self):
+        if self.bandera:
+            return
         # *
-        if self.pre_analisis == TT.ASTERISCO:
+        if self.pre_analisis.tipoToken == TT.ASTERISCO:
             self.parea(TT.ASTERISCO)
             self.F()
             self.TP()
         # |/
-        elif self.pre_analisis == TT.DIAGONAL:
+        elif self.pre_analisis.tipoToken == TT.DIAGONAL:
             self.parea(TT.DIAGONAL)
             self.F()
             self.TP()
@@ -56,16 +61,18 @@ class Scanner:
     
     def F(self):
         # Numero
-        if self.pre_analisis == TT.NUMERO:
+        if self.pre_analisis.tipoToken == TT.NUMERO:
             self.parea(TT.NUMERO)
         # |ID
-        elif self.pre_analisis == TT.ID:
+        elif self.pre_analisis.tipoToken == TT.ID:
             self.parea(TT.ID)
         # |(
-        elif self.pre_analisis == TT.PARENIZQ:
+        elif self.pre_analisis.tipoToken == TT.PARENIZQ:
             self.parea(TT.PARENIZQ)
             self.E()
             self.parea(TT.PARENDER)
+        else:
+            self.parea(TT.NINGUNO)
     
     def parea(self, tipoToken):
         # Si esta incorrecto
@@ -77,7 +84,7 @@ class Scanner:
         # Si correcto
         else: 
             # Coincide el token
-            if self.pre_analisis == tipoToken:
+            if self.pre_analisis.tipoToken == tipoToken:
                 # Coincide y pasa al siguiente
                 if self.indice < self.lista_size:
                     self.indice += 1

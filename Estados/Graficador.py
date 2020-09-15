@@ -55,7 +55,7 @@ class Graficador:
             
         elif a == 6 or b == 6 or c == 6:
             dot.attr('node', shape='doublecircle', color = 'orange',fillcolor = 'white',style ='filled')
-            dot.edge('S0', 'S10', label='[=><]', color = 'orange', fontcolor="white")
+            dot.edge('S0', 'S10', label='[=><!]', color = 'orange', fontcolor="white")
             dot.edge('S10', 'S11', label='=', color = 'orange', fontcolor="white")
         
         elif a == 7 or b == 7 or c == 7:

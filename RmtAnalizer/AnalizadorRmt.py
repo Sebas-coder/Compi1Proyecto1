@@ -14,7 +14,7 @@ class Analizador:
     bandera = True
     
     def __init__(self):  
-        print("INICIO DE ANALISIS JS")
+        print("INICIO DE ANALISIS RMT")
         
     def lexer(self,entrada):
         while len(self.lista_tokens) > 0 : self.lista_tokens.pop()
@@ -73,7 +73,7 @@ class Analizador:
                 # Errores o final de la cadena
                 else:
                     if self.caracter == "$" and pos == len(self.entrada)-1:
-                        print("final")
+                        print("Final")
                     else:
                         self.columna += 1
                         self.addError(self.caracter,TE.CARACTERINVALIDO)
@@ -104,7 +104,7 @@ class Analizador:
                     
             # Estado 3 - PR e ID 
             elif self.estado == 3:
-                if self.caracter.isalpha():
+                if self.caracter.isalpha() or self.caracter.isnumeric():
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
@@ -116,6 +116,7 @@ class Analizador:
                     pos -= 1
                     self.addToken(self.lexema,TT.ID)
             pos += 1
+        print("Finalizo RMT")
             
     def addError(self, lexema,tipo):
         self.bandera = False
