@@ -11,24 +11,32 @@ class Analizador:
     fila = 0
     columna = 0
     bandera = True
-    
+    Path = ""
     
     def __init__(self):  
         print("INICIO DE ANALISIS HTML")
 
     def lexer(self,entrada):
+        while len(self.lista_tokens) > 0 : self.lista_tokens.pop()
+        while len(self.lista_errores) > 0 : self.lista_errores.pop()
         self.entrada = entrada + '$'
         self.caracter = ''
         pos = 0
+        cont_Ruta = 1
         
-        while pos < len(self.entrada[pos]):
+        while pos < len(self.entrada):
             self.caracter = self.entrada[pos]
             
             # Estado 0
             if self.estado == 0:
                 if self.caracter == "<":
-                    self.columna += 1
-                    self.addToken(self.caracter,TT.MENORQUE)
+                    if self.entrada[pos + 1] == "!" and self.entrada[pos + 2] == "-" and self.entrada[pos + 3] == "-":
+                        self.lexema += "<!-"
+                        pos += 3
+                        self.estado = 4
+                    else:
+                        self.columna += 1
+                        self.addToken(self.caracter,TT.MENORQUE)
                 elif self.caracter == ">":
                     self.columna += 1
                     self.addToken(self.caracter,TT.MAYORQUE)
@@ -63,7 +71,7 @@ class Analizador:
                     self.columna += 4
                 elif self.caracter == "\n":
                     self.columna = 0
-                    fila += 1
+                    self.fila += 1
                 # Errores o final de la cadena
                 else:
                     if self.caracter == "$" and pos == len(self.entrada)-1:
@@ -152,7 +160,36 @@ class Analizador:
                 else: 
                     pos -= 1
                     self.addToken(self.lexema,TT.VALOR)
+            # Estado 4 - Comentarios 
+            elif self.estado == 4:
+                if self.caracter == "$" and pos == len(self.entrada)-1:
+                        self.addError(self.lexema,TE.ERERRONEA)
+                elif self.caracter != "-":
+                    if self.caracter == "\n":
+                        self.columna = 0
+                        self.fila += 1
+                    else:
+                        self.columna += 1
+                    self.lexema += self.caracter
+                    self.estado = 4
+                elif self.entrada[pos + 1] == "-" and self.entrada[pos + 2] == ">":
+                    if cont_Ruta == 1:
+                        cont_Ruta += 1
+                    elif cont_Ruta == 2:
+                        self.Path = self.lexema.lstrip("<!--PATHL:")
+                        self.Path = self.Path.rstrip("-->" )
+                        self.Path = self.Path.strip()
+                        cont_Ruta = 0
+                    self.columna += 3
+                    pos += 2
+                    self.lexema += "-->"
+                    self.addToken(self.lexema,TT.COMENTARIO)
+                else: 
+                    self.columna += 1
+                    self.lexema += self.caracter
+                    self.estado = 4
             pos += 1
+        print("COCHEE")
 
     def addError(self, lexema,tipo):
         newError = Error(tipo,lexema)

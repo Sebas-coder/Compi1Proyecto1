@@ -23,6 +23,7 @@ class Analizador:
     E6 = True
     E7 = True
     Cont_ER = 0
+    Path = ""
     
     def __init__(self):  
         print("INICIO DE ANALISIS JS")
@@ -30,9 +31,11 @@ class Analizador:
     def lexer(self,entrada):
         while len(self.lista_tokens) > 0 : self.lista_tokens.pop()
         while len(self.lista_errores) > 0 : self.lista_errores.pop()
+        while len(self.lista_grafica) > 0 : self.lista_grafica.pop()
         self.entrada = entrada + '$'
         self.caracter = ''
         pos = 0
+        cont_Ruta = 1
         
         while pos < len(self.entrada):
             self.caracter = self.entrada[pos]
@@ -155,11 +158,6 @@ class Analizador:
                     self.estado = 7
                 # Cadenas 
                 elif self.caracter == "\"":
-                    if self.E5:
-                        if self.Cont_ER < 3:
-                            self.Cont_ER += 1
-                            self.lista_grafica.append(5)
-                            self.E5 = False
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 8
@@ -223,11 +221,6 @@ class Analizador:
                 # Comentarios
                 elif self.caracter == "/":
                     if self.entrada[pos+1] == "/" or  self.entrada[pos+1] == "*":
-                        if self.E3:
-                            if self.Cont_ER < 3:
-                                self.Cont_ER += 1
-                                self.lista_grafica.append(3)
-                                self.E3 = False
                         self.columna += 1
                         self.lexema += self.caracter
                         self.estado = 4
@@ -325,7 +318,7 @@ class Analizador:
                     
             # Estado 3 - PR e ID 
             elif self.estado == 3:
-                if self.caracter.isalpha():
+                if self.caracter.isalpha() or self.caracter.isnumeric():
                     self.columna += 1
                     self.lexema += self.caracter
                     self.estado = 3
@@ -397,7 +390,7 @@ class Analizador:
                 if self.E3:
                         if self.Cont_ER < 3:
                             self.Cont_ER += 1
-                            self.lista_grafica.append(1)
+                            self.lista_grafica.append(3)
                             self.E3 = False
                             
                 if self.caracter != "\n":
@@ -407,18 +400,18 @@ class Analizador:
                     if self.caracter == "$" and pos == len(self.entrada)-1:
                         self.addError(self.lexema,TE.ERERRONEA)
                 else:
+                    if cont_Ruta == 1:
+                        cont_Ruta += 1
+                    elif cont_Ruta == 2:
+                        self.Path = self.lexema.lstrip("//PATHL:")
+                        self.Path = self.Path.strip()
+                        cont_Ruta = 0
                     self.columna = 0
                     self.fila += 1
                     self.addToken(self.lexema,TT.COMENTUNI)
                     self.estado = 0
                 
             elif self.estado == 6:
-                if self.E4:
-                        if self.Cont_ER < 3:
-                            self.Cont_ER += 1
-                            self.lista_grafica.append(1)
-                            self.E4 = False
-                            
                 if self.caracter == "$" and pos == len(self.entrada)-1:
                         self.addError(self.lexema,TE.ERERRONEA)
                 elif self.caracter != "*":
@@ -429,6 +422,11 @@ class Analizador:
                         self.columna = 0
                     self.estado = 6
                 elif self.entrada[pos +1] == "/":
+                    if self.E4:
+                        if self.Cont_ER < 3:
+                            self.Cont_ER += 1
+                            self.lista_grafica.append(4)
+                            self.E4 = False
                     pos += 1
                     self.columna += 2
                     self.lexema += "*/"
@@ -464,12 +462,16 @@ class Analizador:
                         self.columna = 0
                     self.estado = 8
                 else:
+                    if self.E5:
+                        if self.Cont_ER < 3:
+                            self.Cont_ER += 1
+                            self.lista_grafica.append(5)
+                            self.E5 = False
                     self.columna += 1
                     self.lexema += self.caracter
                     self.addToken(self.lexema,TT.CADENA)
             pos += 1
             
-        
         gr = Graficador()
         gr.Graficar(self.lista_grafica) 
     

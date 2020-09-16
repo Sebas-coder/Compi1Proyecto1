@@ -1,5 +1,5 @@
-from CssAnalizer.Error import Error
-from CssAnalizer.Error import Tipo as TE
+from Errores.Error import Error
+from Errores.Error import Tipo as TE
 from CssAnalizer.Token import Token
 from CssAnalizer.Token import Tipo as TT
 
@@ -10,12 +10,13 @@ class Analizador:
     lista_estados = list()
     # partes de analisis
     estado = 0 
-    lexema = ""
+    Pathlexema = ""
     fila = 0
     columna = 0
     cadenaCorrecta = ""
     bandera = True
     listadoEstados = ""
+    Path = ""
     
     def __init__(self):  
         print("INICIO DE ANALISIS CSS")
@@ -28,6 +29,7 @@ class Analizador:
         self.entrada = entrada + '$'
         self.caracter = ''
         pos = 0
+        cont_Ruta = 1
         
         while pos < len(self.entrada) :
             self.caracter = self.entrada[pos]
@@ -370,6 +372,13 @@ class Analizador:
                     
             elif self.estado == 8: 
                 if self.caracter == "/":
+                    if cont_Ruta == 1:
+                        cont_Ruta += 1
+                    elif cont_Ruta == 2:
+                        self.Path = self.lexema.lstrip("/*PATHL:")
+                        self.Path = self.Path.rstrip("*/")
+                        self.Path = self.Path.strip()
+                        cont_Ruta = 0
                     self.columna += 1
                     self.lexema += self.caracter    
                     self.addToken(self.lexema,TT.COMENTARIO)

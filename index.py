@@ -11,6 +11,7 @@ from graphviz import Digraph
 import os
 import webbrowser
 import time
+from Errores.Error import Tipo as TE
 
 # Analizers class
 from HtmlAnalizer.AnalizadorHtml import Analizador as AHtml
@@ -91,13 +92,15 @@ class Product:
                 vaJs = AJs()
                 vaJs.lexer(cadena)
                 bJs = vaJs.bandera
-                
+                t = vaJs.Path
                 if bJs == True:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - Sin errores')
                 else:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - La cadena tiene errores')
                     lJs = vaJs.lista_errores
-                    self.ImpresionTokens(vaJs)
+                    self.ImpresionTokens(lJs)
+                    webbrowser.open_new_tab(os.path.dirname(__file__) +"/errores.html")
+                
                 
             elif(self.typeAnalizer.get() == '.html'):
                 print("HTML")
@@ -111,7 +114,7 @@ class Product:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - La cadena tiene errores')
                     lHtml = vaHtml.lista_errores
                     self.ImpresionTokens(lHtml)
-                
+                    webbrowser.open_new_tab(os.path.dirname(__file__) +"/errores.html")
                          
             elif(self.typeAnalizer.get() == '.css'):
                 print("CSS")
@@ -129,6 +132,7 @@ class Product:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - La cadena tiene errores')
                     lCss = vaCss.lista_errores
                     self.ImpresionTokens(lCss)
+                    webbrowser.open_new_tab(os.path.dirname(__file__) +"/errores.html")
                     
             elif(self.typeAnalizer.get() == '.rmt'):
                 vaRmt = ARmt()
@@ -150,6 +154,7 @@ class Product:
                     messagebox.showinfo('Project 1', 'Analisis lexico finalizado - La cadena tiene errores')
                     lRmt = vaRmt.lista_errores
                     self.ImpresionTokens(lRmt)
+                    webbrowser.open_new_tab(os.path.dirname(__file__) +"/errores.html")
                
                 
     def ImpresionTokens(self,listado):
@@ -184,7 +189,10 @@ class Product:
             tokens += "<td>"+ str(i) + "</td>\n"
             tokens += "<td>"+ str(listado[i].fila) + "</td>\n"
             tokens += "<td>"+ str(listado[i].columna) + "</td>\n"
-            tokens += "<td>"+ str(listado[i].lexema) + "</td>\n"
+            if listado[i].tipoError == TE.CARACTERINVALIDO:
+                tokens += "<td> Caracter invalido:  "+ str(listado[i].lexema) + "</td>\n"
+            elif listado[i].tipoError == TE.ERERRONEA:
+                tokens += "<td> Expresion regular erronea:  "+ str(listado[i].lexema) + "</td>\n"
             tokens += "</tr>\n"
         final = "</tr>\n"\
             "</tbody>\n"\
@@ -196,7 +204,7 @@ class Product:
         archHtml = os.path.dirname(__file__) + "/errores.html"
         archivo = open(archHtml,'w')
         archivo.write(contenido)
-        webbrowser.open_new_tab(os.path.dirname(__file__) +"/errores.html")
+        
     
     def grafo(self, listaEstados):
         dot = Digraph()

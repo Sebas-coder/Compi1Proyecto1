@@ -2,7 +2,7 @@ from graphviz import Digraph
 import os
 import webbrowser
 
-dot = Digraph()
+''' dot = Digraph()
 
 dot.attr(bgcolor='#15415D')
 dot.attr(rankdir='LR', size='8,5')
@@ -60,8 +60,11 @@ archivo.write(contenido)
 
 print(os.path.abspath(__file__))
 # Esta es la dasnfbdfij
-print(os.path.dirname(__file__))
+print(os.path.dirname(__file__)) '''
 """ webbrowser.open_new_tab(os.path.dirname(__file__) +"/archivo.html") """
-v = " sdgfb\n"\
-    "sadffdsfewd"
+
+v = "/*PATHL: ruta */"
+v = v.lstrip("/*PATHL:")
+v = v.rstrip("*/" )
+v = v.strip()
 print(v)
