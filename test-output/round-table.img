@@ -11,4 +11,13 @@ digraph {
 	node [color=orange fillcolor=white shape=doublecircle style=filled]
 	S4 -> S5 [label="/" color=orange fontcolor=white]
 	S5 -> S5 [label="[^SL]" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=circle style=filled]
+	S0 -> S4 [label="/" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=circle style=filled]
+	S4 -> S6 [label="*" color=orange fontcolor=white]
+	S6 -> S6 [label="[^*]" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=doublecircle style=filled]
+	S6 -> S7 [label="*" color=orange fontcolor=white]
+	S7 -> S6 [label="[^*]" color=orange fontcolor=white]
+	S7 -> S7 [label="/" color=orange fontcolor=white]
 }

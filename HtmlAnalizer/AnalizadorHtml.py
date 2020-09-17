@@ -12,6 +12,7 @@ class Analizador:
     columna = 0
     bandera = True
     Path = ""
+    cadenaCorrecta = ""
     
     def __init__(self):  
         print("INICIO DE ANALISIS HTML")
@@ -67,11 +68,14 @@ class Analizador:
                 # Delimitadores
                 elif self.caracter == " ":
                     self.columna += 1
+                    self.cadenaCorrecta += self.caracter
                 elif self.caracter == "\t":
                     self.columna += 4
+                    self.cadenaCorrecta += self.caracter
                 elif self.caracter == "\n":
                     self.columna = 0
                     self.fila += 1
+                    self.cadenaCorrecta += self.caracter
                 # Errores o final de la cadena
                 else:
                     if self.caracter == "$" and pos == len(self.entrada)-1:
@@ -105,7 +109,7 @@ class Analizador:
                     if self.lexema.lower() == "html":
                         self.addToken(self.lexema,TT.HTML)
                     elif self.lexema.lower() == "head":
-                        self.addToken(self.lexema,TT.head)
+                        self.addToken(self.lexema,TT.HEAD)
                     elif self.lexema.lower() == "title":
                         self.addToken(self.lexema,TT.TITLE)
                     elif self.lexema.lower() == "body":
@@ -138,7 +142,7 @@ class Analizador:
                         self.addToken(self.lexema,TT.TR)
                     elif self.lexema.lower() == "td":
                         self.addToken(self.lexema,TT.TD)
-                    elif self.lexemaisalpha.lower() == "caption":
+                    elif self.lexema.lower() == "caption":
                         self.addToken(self.lexema,TT.CAPTION)
                     elif self.lexema.lower() == "col":
                         self.addToken(self.lexema,TT.COL)
@@ -198,6 +202,7 @@ class Analizador:
         self.lexema = ""
     
     def addToken(self, lexema, tipo):
+        self.cadenaCorrecta += lexema
         newToken = Token(tipo,lexema)
         self.lista_tokens.append(newToken)
         self.estado = 0

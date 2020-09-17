@@ -16,6 +16,8 @@ class Scanner:
         self.lista_size = len(self.lista_tokens) - 1
         self.pre_analisis = self.lista_tokens[self.indice]
         self.E()
+        if self.indice <= self.lista_size:
+            self.bandera = True
         
     def E(self):
         self.T() 
@@ -72,7 +74,7 @@ class Scanner:
             self.E()
             self.parea(TT.PARENDER)
         else:
-            self.parea(TT.NINGUNO)
+            self.parea(TT.NUMERO)
     
     def parea(self, tipoToken):
         # Si esta incorrecto
@@ -89,6 +91,8 @@ class Scanner:
                 if self.indice < self.lista_size:
                     self.indice += 1
                     self.pre_analisis = self.lista_tokens[self.indice]
+                else:
+                    self.indice += 1
             # No coincide error
             else: 
                 #Se detecta error y pasa al siguiente

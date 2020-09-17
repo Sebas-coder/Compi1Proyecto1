@@ -403,11 +403,13 @@ class Analizador:
                     if cont_Ruta == 1:
                         cont_Ruta += 1
                     elif cont_Ruta == 2:
-                        self.Path = self.lexema.lstrip("//PATHL:")
+                        self.Path = self.lexema
+                        self.Path = self.Path.lstrip("//PATHL:")
                         self.Path = self.Path.strip()
                         cont_Ruta = 0
                     self.columna = 0
                     self.fila += 1
+                    self.lexema += self.caracter
                     self.addToken(self.lexema,TT.COMENTUNI)
                     self.estado = 0
                 
@@ -482,7 +484,7 @@ class Analizador:
         self.estado = 0
         self.lexema = ""
     
-    def addToken(self, lexema, tipo):
+    def addToken(self, lexema, tipo):    
         self.cadenaCorrecta += lexema
         newToken = Token(tipo,lexema,self.fila,self.columna)
         self.lista_tokens.append(newToken)

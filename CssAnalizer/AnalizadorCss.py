@@ -10,13 +10,14 @@ class Analizador:
     lista_estados = list()
     # partes de analisis
     estado = 0 
-    Pathlexema = ""
+    lexema = ""
     fila = 0
     columna = 0
     cadenaCorrecta = ""
     bandera = True
     listadoEstados = ""
     Path = ""
+
     
     def __init__(self):  
         print("INICIO DE ANALISIS CSS")

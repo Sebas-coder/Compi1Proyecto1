@@ -68,3 +68,5 @@ v = v.lstrip("/*PATHL:")
 v = v.rstrip("*/" )
 v = v.strip()
 print(v)
+
+v = "/home/sebastian/Escritorio/Destino"

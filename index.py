@@ -20,6 +20,10 @@ from JsAnalizer.AnalizadorJs import Analizador as AJs
 from RmtAnalizer.AnalizadorRmt import Analizador as ARmt
 from RmtAnalizer.ScannerRmt import Scanner as ScannerRmt
 
+# Tokens
+from JsAnalizer.Token import Token as TokenJs
+from JsAnalizer.Token import Tipo as TTJs
+
 # index class 
 class Product:
     # main constructor
@@ -71,6 +75,8 @@ class Product:
             
             self.button = ttk.Button(self.wind,text = 'Analizar',command = self.Analize)
             self.button.place(x = 900, y = 12)
+            
+            
     
     # methods of menu      
     def openFile(self):
@@ -92,7 +98,9 @@ class Product:
                 vaJs = AJs()
                 vaJs.lexer(cadena)
                 bJs = vaJs.bandera
-                t = vaJs.Path
+                pthJS = vaJs.Path
+                ltJs = vaJs.lista_tokens
+                
                 if bJs == True:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - Sin errores')
                 else:
@@ -100,13 +108,18 @@ class Product:
                     lJs = vaJs.lista_errores
                     self.ImpresionTokens(lJs)
                     webbrowser.open_new_tab(os.path.dirname(__file__) +"/errores.html")
-                
+                try:
+                    archivo = open(pthJS + "/archivo.js",'w')
+                    archivo.write(vaJs.cadenaCorrecta)
+                except Exception:
+                    messagebox.showinfo('Project 1', 'Error con la ruta de guardado') 
                 
             elif(self.typeAnalizer.get() == '.html'):
                 print("HTML")
                 vaHtml = AHtml()
                 vaHtml.lexer(cadena)
                 bHtml = vaHtml.bandera
+                pthHtml = vaHtml.Path
                 
                 if bHtml == True:
                     messagebox.showinfo('Project 1', 'Analisis finalizado - Sin errores')
@@ -115,6 +128,11 @@ class Product:
                     lHtml = vaHtml.lista_errores
                     self.ImpresionTokens(lHtml)
                     webbrowser.open_new_tab(os.path.dirname(__file__) +"/errores.html")
+                try:
+                    archivo = open(pthHtml + "/archivo.html",'w')
+                    archivo.write(vaHtml.cadenaCorrecta)
+                except Exception:
+                    messagebox.showinfo('Project 1', 'Error con la ruta de guardado')
                          
             elif(self.typeAnalizer.get() == '.css'):
                 print("CSS")
@@ -122,6 +140,7 @@ class Product:
                 vaCss.lexer(cadena)
                 bCss = vaCss.bandera
                 leCss = vaCss.lista_estados
+                pthCss = vaCss.Path
                 self.txtConsole.delete("1.0", END)
                 for i in range(0,len(leCss)):
                         self.txtConsole.insert(END, leCss[i] + "\n")
@@ -133,6 +152,11 @@ class Product:
                     lCss = vaCss.lista_errores
                     self.ImpresionTokens(lCss)
                     webbrowser.open_new_tab(os.path.dirname(__file__) +"/errores.html")
+                try:
+                    archivo = open(pthCss + "/archivo.css",'w')
+                    archivo.write(vaCss.cadenaCorrecta)
+                except Exception:
+                    messagebox.showinfo('Project 1', 'Error con la ruta de guardado')
                     
             elif(self.typeAnalizer.get() == '.rmt'):
                 vaRmt = ARmt()
@@ -203,15 +227,7 @@ class Product:
         contenido = inicio + archCSS + medio + tokens + final
         archHtml = os.path.dirname(__file__) + "/errores.html"
         archivo = open(archHtml,'w')
-        archivo.write(contenido)
-        
-    
-    def grafo(self, listaEstados):
-        dot = Digraph()
-        dot.attr(bgcolor='#15415D', label='agraph')
-        dot.attr(rankdir='LR', size='8,5')
-        
-        dot.render('test-output/round-table.img', view=True)
+        archivo.write(contenido)        
                 
 if __name__ == '__main__':
     window = Tk()
