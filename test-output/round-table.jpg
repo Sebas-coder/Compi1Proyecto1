@@ -1,0 +1,30 @@
+digraph {
+	bgcolor="#15415D"
+	rankdir=LR size="8,5"
+	node [color=orange fillcolor=white shape=circle style=filled]
+	S0
+	node [color=orange fillcolor=white shape=doublecircle style=filled]
+	S0 -> S3 [label="[a-zA-Z]" color=orange fontcolor=white]
+	S3 -> S3 [label="[a-zA-Z-0-9]" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=doublecircle style=filled]
+	S0 -> S1 [label="[0-9]" color=orange fontcolor=white]
+	S1 -> S2 [label="." color=orange fontcolor=white]
+	S2 -> S2 [label="[0-9]" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=circle style=filled]
+	S0 -> S4 [label="\"" color=orange fontcolor=white]
+	S4 -> S4 [label="[^\"]" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=doublecircle style=filled]
+	S4 -> S5 [label="\"" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=circle style=filled]
+	S0 -> S6 [label="<" color=orange fontcolor=white]
+	S6 -> S7 [label="!" color=orange fontcolor=white]
+	S7 -> S8 [label="-" color=orange fontcolor=white]
+	S8 -> S9 [label="-" color=orange fontcolor=white]
+	S9 -> S9 [label="[^-]" color=orange fontcolor=white]
+	S9 -> S10 [label="-" color=orange fontcolor=white]
+	S10 -> S11 [label="-" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=doublecircle style=filled]
+	S11 -> S12 [label=">" color=orange fontcolor=white]
+	node [color=orange fillcolor=white shape=doublecircle style=filled]
+	S0 -> S113 [label=SA color=orange fontcolor=white]
+}

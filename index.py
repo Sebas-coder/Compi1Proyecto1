@@ -40,7 +40,7 @@ class Product:
             self.wind.config(menu = menubar) 
             
             filemenu = Menu(menubar, tearoff=0)
-            filemenu.add_command(label="Nuevo")
+            filemenu.add_command(label="Nuevo", command = self.Nuevo)
             filemenu.add_command(label="Abrir", command = self.openFile)
             filemenu.add_command(label="Guardar")
             filemenu.add_command(label="Guardar como")
@@ -87,6 +87,10 @@ class Product:
             archi1.close()
             self.txtEntry.delete("1.0", END) 
             self.txtEntry.insert("1.0", contenido)
+            
+    def Nuevo(self):
+        self.txtEntry.delete("1.0", END)     
+    
 
     def Analize(self):
         cadena = self.txtEntry.get("1.0", END)  
